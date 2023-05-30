@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+
 event = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 signature = ['a', 'b', 'a', 'c']
 
@@ -6,8 +7,6 @@ signature = ['a', 'b', 'a', 'c']
 def k_equal_appx_match(sig, event, appr_para):
     sig.insert(0, 'N')
     event.insert(0, 'N')
-    print(sig)
-    print(event)
     L = []
     start = 1
     m = len(event)
@@ -31,32 +30,49 @@ def k_equal_appx_match(sig, event, appr_para):
             q = j
             while q > 0:
                 if C[p][q] == C[p-1][q-1] and event[p] == sig[q]:
-                    M.append(p)
                     p = p-1
                     q = q-1
+                    M.append(p)
                 elif C[p-1][q] < (C[p][q-1]+1):
                     p = p-1
                 else:
                     q = q-1
             L.append(M)
-            print(C)
             for j in range(1, n):
                 C[i][j] = j
                 start = i
     return L
 
+# nmt means no more than
 
-def k_nomore_appx_match(sig, event, appr_para):
-    return 0
+
+def k_nmt_appx_match(sig, event, appr_para):
+    m = len(event)
+    k = appr_para+1
+    L = [[] for i in range(k)]
+    Q = [0, m-1]
+    for i in range(k):
+        T = []
+        while Q:
+            H = Q
 
 
 def act_infer(sig, event, appr_para):
     return 0
 
 
+def print_check_empty(L):
+    if L == []:
+        print("This list is empty.")
+    else:
+        print(L)
+
+
 if __name__ == '__main__':
-    k1 = 0
-    k2 = 0
-    k3 = 0
-    L = k_equal_appx_match(signature, event, k1)
-    print(L)
+    k0 = 0
+    k1 = 1
+    k2 = 2
+    k3 = 3
+    L = k_equal_appx_match(signature, event, k0)
+    print_check_empty(L)
+    print(len(L))
