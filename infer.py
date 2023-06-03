@@ -1,8 +1,13 @@
 # -*- coding: UTF-8 -*-
 
 event = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
+event_1= ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 signature = ['a', 'b', 'a', 'c']
 
+activities=[[] for i in range(21)]
+print(activities)
+activities[0]=event_1
+print(activities)
 
 def k_equal_appx_match(sig, event, appr_para):
     sig.insert(0, 'N')
