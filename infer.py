@@ -5,11 +5,11 @@ event_1= ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 signature = ['a', 'b', 'a', 'c']
 
 activities=[[] for i in range(21)]
-print(activities)
+# print(activities)
 activities[0]=event_1
-print(activities)
+# print(activities)
 
-def k_equal_appx_match(sig, event, appr_para):
+def k_equal_appx_match(event, sig, appr_para):
     sig.insert(0, 'N')
     event.insert(0, 'N')
     L = []
@@ -78,6 +78,6 @@ if __name__ == '__main__':
     k1 = 1
     k2 = 2
     k3 = 3
-    L = k_equal_appx_match(signature, event, k0)
+    L = k_equal_appx_match(event, signature, k0)
     print_check_empty(L)
     print(len(L))
