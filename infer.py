@@ -14,7 +14,7 @@ def list_move_pop(L):
 
 
 def print_check_empty(L):
-    if L == []:
+    if not any(L):
         return "Empty!"
     else:
         return L
@@ -73,8 +73,9 @@ def k_nmt_appx_match(event_para, sig_para, appr_para):
         L_pre=k_equal_appx_match(event,sig,i)
         for i_reseult in L_pre:
             L[i].append(i_reseult)
-            for index in range(i_reseult[-1],i_reseult[0]+1):
-                event[index]="S"
+            if i_reseult:
+                for index in range(i_reseult[-1],i_reseult[0]+1):
+                    event[index]="S"
     return L
 
 
@@ -89,5 +90,6 @@ if __name__ == '__main__':
     k3 = 3
 
     L=k_nmt_appx_match(event,signature,k3)
+    print(k3)
     for i in range(len(L)):
         print(i,print_check_empty(L[i]))
