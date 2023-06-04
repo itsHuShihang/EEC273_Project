@@ -21,9 +21,9 @@ def print_check_empty(L):
 
 
 def k_equal_appx_match(event_para, sig_para, appr_para):
-    sig=copy.deepcopy(sig_para)
+    sig = copy.deepcopy(sig_para)
     sig.insert(0, 'N')
-    event=copy.deepcopy(event_para)
+    event = copy.deepcopy(event_para)
     event.insert(0, 'N')
     L = []
     start = 1
@@ -46,7 +46,7 @@ def k_equal_appx_match(event_para, sig_para, appr_para):
             M = []
             p = i
             q = j
-            while q > 0 and p>0:
+            while q > 0 and p > 0:
                 if C[p][q] == C[p-1][q-1] and event[p] == sig[q]:
                     p = p-1
                     q = q-1
@@ -63,19 +63,64 @@ def k_equal_appx_match(event_para, sig_para, appr_para):
 
 
 # "nmt" means "no more than"
-def k_nmt_appx_match(event_para, sig_para, appr_para):
-    event=copy.deepcopy(event_para)
-    sig=copy.deepcopy(sig_para)
+# This is a simplified edition of k_nmt_appx_match function, the results will be incorrect in some situations
+def simplified_k_nmt_appx_match(event_para, sig_para, appr_para):
+    event = copy.deepcopy(event_para)
+    sig = copy.deepcopy(sig_para)
     m = len(event)
     k = appr_para+1
     L = [[] for i in range(k)]
     for i in range(k):
-        L_pre=k_equal_appx_match(event,sig,i)
+        L_pre = k_equal_appx_match(event, sig, i)
         for i_reseult in L_pre:
             L[i].append(i_reseult)
             if i_reseult:
-                for index in range(i_reseult[-1],i_reseult[0]+1):
-                    event[index]="S"
+                for index in range(i_reseult[-1], i_reseult[0]+1):
+                    event[index] = "S"
+    return L
+
+
+def paper_k_nmt_appx_match(event_para, sig_para, appr_para):
+    event = copy.deepcopy(event_para)
+    sig = copy.deepcopy(sig_para)
+    m = len(event)
+    k = appr_para+1
+    L = [[] for i in range(k)]
+    Q = [[0, m-1]]
+    for i in range(k):
+        T = []
+        while Q:
+            H = Q[0]
+            Q = list_move_pop(Q)
+            D_for_match = ['S' for i in range(m)]
+            D_for_match[H[0]:H[-1]+1] = event[H[0]:H[-1]+1]
+            D = event[H[0]:H[-1]+1]
+            D_start_index = H[0]
+            D_end_index = H[-1]
+            print("D_for_match to match:", D_for_match)
+            L_pre = k_equal_appx_match(D_for_match, sig, i)
+            for i_reseult in L_pre:
+                L[i].append(i_reseult)
+            # print(L[i])
+            for L_item in L[i]:
+                B_start_index = D_start_index
+                B_end_index = L_item[-1]-1
+                D_start_index = L_item[0]+1
+                D_end_index = H[-1]
+                B = D[0:L_item[-1]]
+                D_for_match = ['S' for i in range(m)]
+                D_for_match[L_item[0]+1::] = D[L_item[0]+1::]
+                D = D[L_item[0]+1::]
+                print("D second:", D)
+                if B:
+                    start = B_start_index
+                    end = B_end_index
+                    T.append([start, end])
+            if D:
+                start = D_start_index
+                end = D_end_index
+                T.append([start, end])
+        Q = T
     return L
 
 
@@ -88,8 +133,16 @@ if __name__ == '__main__':
     k1 = 1
     k2 = 2
     k3 = 3
+    # event=['a','a','b','a','c','b','a']
 
-    L=k_nmt_appx_match(event,signature,k3)
+    L = simplified_k_nmt_appx_match(event, signature, k3)
+    print("simple result:")
     print(k3)
     for i in range(len(L)):
-        print(i,print_check_empty(L[i]))
+        print(i, print_check_empty(L[i]))
+
+    L = paper_k_nmt_appx_match(event, signature, k3)
+    print("paper result:")
+    print(k3)
+    for i in range(len(L)):
+        print(i, print_check_empty(L[i]))
