@@ -1,9 +1,17 @@
 # -*- coding: UTF-8 -*-
+
+
 import copy
 
 
 event = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
+event_1 = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 signature = ['a', 'b', 'a', 'c']
+
+activities = [[] for i in range(21)]
+# print(activities)
+activities[0] = event_1
+# print(activities)
 
 
 def list_move_pop(L):
@@ -18,7 +26,6 @@ def print_check_empty(L):
         return "Empty!"
     else:
         return L
-
 
 def k_equal_appx_match(event_para, sig_para, appr_para):
     sig=copy.deepcopy(sig_para)
@@ -61,6 +68,47 @@ def k_equal_appx_match(event_para, sig_para, appr_para):
                 start = i
     return L
 
+# nmt means no more than
+# def paper_k_nmt_appx_match(event_para, sig_para, appr_para):
+#     event=copy.deepcopy(event_para)
+#     sig=copy.deepcopy(sig_para)
+#     m = len(event)
+#     k = appr_para+1
+#     L = [[] for i in range(k)]
+#     Q = [[0, m-1]]
+#     for i in range(k):
+#         T = []
+#         while Q:
+#             H = Q[0]
+#             Q = list_move_pop(Q)
+#             D = event[H[0]:H[-1]+1]
+#             D_start_index = H[0]
+#             D_end_index = H[-1]
+#             print("D is",D)
+#             L_pre=k_equal_appx_match(D,sig,i)
+#             for i_reseult in L_pre:
+#                 L[i].append(i_reseult)
+#             print("L is ", L)
+#             print("i is",i)
+#             print("Li is",L[i])
+#             for L_item in L[i]:
+#                 B_start_index = H[0]
+#                 print("item -1 is", L_item[-1])
+#                 B_end_index = L_item[-1]-1
+#                 D_start_index = L_item[0]+1
+#                 D_end_index = H[-1]
+#                 B = D[0:L_item[-1]]
+#                 D = D[L_item[0]+1::]
+#                 if B:
+#                     start = B_start_index
+#                     end = B_end_index
+#                     T.append([start, end])
+#             if D:
+#                 start = D_start_index
+#                 end = D_end_index
+#                 T.append([start, end])
+#         Q = T
+#     return L
 
 # "nmt" means "no more than"
 def k_nmt_appx_match(event_para, sig_para, appr_para):
@@ -77,7 +125,6 @@ def k_nmt_appx_match(event_para, sig_para, appr_para):
                 event[index]="S"
     return L
 
-
 def act_infer(event, sig, appr_para):
     return 0
 
@@ -91,3 +138,8 @@ if __name__ == '__main__':
     L=k_nmt_appx_match(event,signature,k3)
     for i in range(len(L)):
         print(i,print_check_empty(L[i]))
+
+    # L=paper_k_nmt_appx_match(event,signature,k3)
+    # print("test result is")
+    # for i in range(len(L)):
+    #     print(i,print_check_empty(L[i]))
