@@ -1,9 +1,10 @@
 from datetime import datetime
+from operator import le
 import time
 import infer
 import generator
 
-N_loop = 100
+N_loop = 150
 acts_per_loop = 21
 N_line = N_loop*acts_per_loop
 
@@ -15,9 +16,10 @@ file_name_generate = "activities_generated.dat"
 file_name_results = "test_results.dat"
 
 k0 = 0
-k1 = 0
+k1 = 1
 k2 = 2
 k3 = 3
+k=3
 
 signature_0 = ['k', 'o', 'n', 'l', 'm', 'c', 't', 'u', 'c', 'a']
 signature_1 = ['k', 'p', 'n', 'l', 'm', 'c', 't', 'u', 'c', 'a', 'q']
@@ -44,23 +46,27 @@ signature = [signature_0, signature_1, signature_2, signature_3, signature_4, si
              signature_10, signature_11, signature_12, signature_13, signature_14, signature_15, signature_16, signature_17, signature_18, signature_19, signature_20]
 
 def run_evaluate():
-    # generate test events and write them to the file "activities_generated.dat"
-    print("Events generating starts.")
+    tp=[0 for i in range(acts_per_loop)]
+    fp=[0 for i in range(acts_per_loop)]
+    fn=[0 for i in range(acts_per_loop)]
 
-    f = open(file_name_generate, 'w')
-    f.close()
-    f = open(file_name_results, 'w')
-    f.close()
+    # generate test events and write them to the file "activities_generated.dat"
+
+    # f = open(file_name_generate, 'w')
+    # f.close()
+    # f = open(file_name_results, 'w')
+    # f.close()
     # f=open("result_history.dat",'w')
     # f.close()
     rh=open("result_history.dat",'a')
 
-    with open(file_name_generate, 'w') as ag:
-        for i in range(N_loop):
-            for j in range(acts_per_loop):
-                generator.randomEventWriteInFile(
-                    ag, signature[j], error_rate, repeat_rate, lose_rate)
-    print("Events generating finished.")
+    # print("Events generating starts.")
+    # with open(file_name_generate, 'w') as ag:
+    #     for i in range(N_loop):
+    #         for j in range(acts_per_loop):
+    #             generator.randomEventWriteInFile(
+    #                 ag, signature[j], error_rate, repeat_rate, lose_rate)
+    # print("Events generating finished.")
 
 
     # infer and determine the correctness, write the results to the file "test_results.dat"
@@ -76,8 +82,27 @@ def run_evaluate():
                     if s != '\n':
                         event_list.append(s)
 
+                print("Event No.",i)
+                print("k:",k)
                 correct_sig = i % 21
-                LU = infer.act_infer(event_list, signature, k3)
+                LU = infer.act_infer(event_list, signature, k)
+                if len(LU)==0:
+                    fn[correct_sig]+=1
+                if len(LU)==1:
+                    if LU[0]==correct_sig:
+                        tp[correct_sig]+=1
+                    else:
+                        fn[correct_sig]+=1
+                if len(LU)>=2:
+                    fp[correct_sig]+=1
+                TP=0
+                FP=0
+                FN=0
+                for j in range(acts_per_loop):
+                    TP+=tp[j]
+                    FP+=fp[j]
+                    FN+=fn[j]
+
                 ar.write(str(i)+':')
                 wrong+=1
                 for item in LU:
@@ -89,11 +114,27 @@ def run_evaluate():
                 # print("No.",i,"event_list:",event_list,",the result is:",LU,"correct result:",correct_sig)
             ar.write("*************************\n")
             ar.write("right: "+str(right)+"\nwrong: "+str(wrong)+"\ntotal :"+str(right+wrong)+"\nratio: "+str(right/(right+wrong)))
+            ar.write("-------------------\n")
+            ar.write("\nTP:"+str(TP)+",ratio:"+str(TP/(TP+FP+FN)))
+            ar.write("\nFP:"+str(FP)+",ratio:"+str(FP/(TP+FP+FN)))
+            ar.write("\nFN:"+str(FN)+",ratio:"+str(FN/(TP+FP+FN)))
+            ar.write("\nTotal:"+str(TP+FP+FN)+"\n")
             current_date_and_time = datetime.now()
             rh.write("*************************\n")
             rh.write(str(current_date_and_time)+'\n')
             rh.write("*************************\n")
             rh.write("right: "+str(right)+"\nwrong: "+str(wrong)+"\ntotal :"+str(right+wrong)+"\nratio: "+str(right/(right+wrong)))
+            rh.write("\n")
+            rh.write("\nTP:"+str(TP)+",ratio:"+str(TP/(TP+FP+FN)))
+            rh.write("\nFP:"+str(FP)+",ratio:"+str(FP/(TP+FP+FN)))
+            rh.write("\nFN:"+str(FN)+",ratio:"+str(FN/(TP+FP+FN)))
+            rh.write("\nTotal:"+str(TP+FP+FN)+"\n")
+
+            for c in range(acts_per_loop):
+                ar.write("\n"+ str(c)+": TP :"+str(tp[c])+" FP: "+str(fp[c])+" FN: "+str(fn[c]))
+                rh.write("\n"+ str(c)+": TP :"+str(tp[c])+" FP: "+str(fp[c])+" FN: "+str(fn[c]))
+
+ 
             rh.write("\n\n")
             rh.close()
 
@@ -101,6 +142,4 @@ def run_evaluate():
     print("Evaluation finished.")
 
 if __name__ == '__main__':
-    for i in range(1000):
-        run_evaluate()
-        time.sleep(1)
+    run_evaluate()
