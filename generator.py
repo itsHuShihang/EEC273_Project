@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import os
 import random
 
@@ -19,11 +20,9 @@ def randomEventWriteInFile(file, event: list, error: int, repeat: int, ignore: i
     :return: void
     """
 
-    if_write=1
     for item in event:
         # Simulate ignoring with a 5% probability
         if random.random() < ignore / 100:
-            if_write=0
             continue
 
         # Simulate error with a 10% probability
@@ -36,20 +35,17 @@ def randomEventWriteInFile(file, event: list, error: int, repeat: int, ignore: i
             file.write(item)
 
         # Write the item to the file
-        if_write=1
         file.write(item)
 
-
-    if if_write:
-        file.write("\n")
+    file.write("\n")
 
 
 
 if __name__ == '__main__':
 
     # generate a file called "activities_generated.dat" if it does not exit
-    file_name = "activites_generated.dat"
-    if os.path.exists(file_name):
+    file_name = "activities_generated.dat"
+    if not os.path.exists(file_name):
         os.makedirs(file_name)
 
     # write data to the file

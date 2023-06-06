@@ -172,6 +172,7 @@ def act_infer(event_para, sig_seq_para, appr_para):
     LUlen = []
     for i in range(amount):
         L = paper_k_nmt_appx_match(event, sig_seq[i], k)
+        # L=simplified_k_nmt_appx_match(event,sig_seq[i],k)
         for i_k in range(len(L)):
             if check_empty(L[i_k]):
                 LU.append(i)
@@ -179,10 +180,10 @@ def act_infer(event_para, sig_seq_para, appr_para):
                 LUlen.append(len(sig_seq[i]))
                 break
 
-    print("Initial result:")
-    for i in range(len(LU)):
-        print(i, "Detected signature",
-              LU[i], "with k=", LUk[i], ", the signature length is", LUlen[i], ".")
+    # print("Initial result:")
+    # for i in range(len(LU)):
+    #     print(i, "Detected signature",
+    #           LU[i], "with k=", LUk[i], ", the signature length is", LUlen[i], ".")
 
     for iter_1 in range(len(LU)):
         for iter_2 in range(iter_1+1, len(LU)):
@@ -203,16 +204,15 @@ def act_infer(event_para, sig_seq_para, appr_para):
                 LUlen[del_inx] = 'N'
                 continue
 
-    print(del_cnt, "items are deleted.")
+    # print(del_cnt, "items are deleted.")
     for i in range(del_cnt):
         LU.remove('N')
         LUk.remove('N')
         LUlen.remove('N')
 
-    print("Final result:")
-    for i in range(len(LU)):
-        print(i, "Detected signature",
-              LU[i], "with k=", LUk[i], ", the signature length is", LUlen[i], ".")
+    # print("Final result:")
+    # for i in range(len(LU)):
+    #     print(i, "Detected signature",LU[i], "with k=", LUk[i], ", the signature length is", LUlen[i], ".")
 
     return LU
 

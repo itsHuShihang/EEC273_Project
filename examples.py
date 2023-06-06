@@ -6,8 +6,8 @@ event_3 = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 event_4 = ['a', 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'a', 'b', 'a', 'b', 'c']
 
 # generate a file calle "activities_generated.dat" if it does not exit
-file_name = "activites_generated.dat"
-if os.path.exists(file_name):
+file_name = "activities_generated.dat"
+if not os.path.exists(file_name):
     os.makedirs(file_name)
 
 # write data to the file
