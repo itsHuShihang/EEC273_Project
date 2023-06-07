@@ -1,25 +1,18 @@
 from datetime import datetime
-from operator import le
 import time
 import infer
 import generator
 
-N_loop = 150
+N_loop = 1000
 acts_per_loop = 21
 N_line = N_loop*acts_per_loop
 
-error_rate = 2
+error_rate = 1
 repeat_rate = 2
 lose_rate = 1
 
 file_name_generate = "activities_generated.dat"
 file_name_results = "test_results.dat"
-
-k0 = 0
-k1 = 1
-k2 = 2
-k3 = 3
-k=3
 
 signature_0 = ['k', 'o', 'n', 'l', 'm', 'c', 't', 'u', 'c', 'a']
 signature_1 = ['k', 'p', 'n', 'l', 'm', 'c', 't', 'u', 'c', 'a', 'q']
@@ -45,7 +38,8 @@ signature_20 = ['e', 'y', 'f', 'x']
 signature = [signature_0, signature_1, signature_2, signature_3, signature_4, signature_5, signature_6, signature_7, signature_8, signature_9,
              signature_10, signature_11, signature_12, signature_13, signature_14, signature_15, signature_16, signature_17, signature_18, signature_19, signature_20]
 
-def run_evaluate():
+def run_evaluate(k_para):
+    k=k_para
     tp=[0 for i in range(acts_per_loop)]
     fp=[0 for i in range(acts_per_loop)]
     fn=[0 for i in range(acts_per_loop)]
@@ -76,15 +70,16 @@ def run_evaluate():
     with open(file_name_generate, '+r') as ag:
         with open(file_name_results, 'w') as ar:
             for i in range(N_line):
+                k=k_para
                 event_str = ag.readline()
                 event_list = []
                 for s in event_str:
                     if s != '\n':
                         event_list.append(s)
 
-                print("Event No.",i)
-                print("k:",k)
                 correct_sig = i % 21
+                if len(event_list)<=3:
+                    k=0
                 LU = infer.act_infer(event_list, signature, k)
                 if len(LU)==0:
                     fn[correct_sig]+=1
@@ -142,4 +137,5 @@ def run_evaluate():
     print("Evaluation finished.")
 
 if __name__ == '__main__':
-    run_evaluate()
+    run_evaluate(1)
+
